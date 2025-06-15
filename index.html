@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="projectTimelineMonitor">Project Timeline Monitor</title>
+    <style>
+        :root {
+            --body-bg: linear-gradient(135deg, #6b73ff 0%, #4f3a9a 100%); 
+            --container-bg: rgba(255, 255, 255, 0.98);
+            --container-shadow: 0 25px 70px rgba(0, 0, 0, 0.2); 
+            --text-color: #2c3e50; 
+            --heading-gradient-start: #667eea;
+            --heading-gradient-end: #764ba2;
+            --tab-container-bg: #e9ecef; 
+            --tab-button-color: #495057;
+            --tab-button-active-bg: #ffffff;
+            --tab-button-active-color: var(--heading-gradient-start);
+            --tab-button-active-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            --form-section-bg: #fdfdff; 
+            --form-section-shadow: 0 8px 25px rgba(0, 0, 0, 0.07); 
+            --label-color: #495057;
+            --input-border-color: #ced4da;
+            --input-bg: #ffffff;
+            --input-text-color: #2c3e50;
+            --input-focus-border-color: var(--heading-gradient-start);
+            --input-focus-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25); 
+            --button-gradient-start: #5e72e4; 
+            --button-gradient-end: #825ee4;
+            --button-text-color: white;
+            --button-disabled-bg: #adb5bd;
+            --button-hover-shadow: 0 7px 18px rgba(82, 94, 228, 0.35); 
+            --timeline-line-gradient-start: #a5b4fc; 
+            --timeline-line-gradient-end: #9a86cd;
+            --stage-card-bg: #ffffff;
+            --stage-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --stage-card-hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            --stage-card-completed-bg: #e6fffa;
+            --stage-card-completed-border: #38c172; 
+            --stage-dot-bg: #ffffff;
+            --stage-dot-border: var(--heading-gradient-start);
+            --stage-dot-completed-bg: var(--stage-card-completed-border);
+            --stage-dot-completed-border: var(--stage-card-completed-border);
+            --stage-number-gradient-start: var(--heading-gradient-start);
+            --stage-number-gradient-end: var(--heading-gradient-end);
+            --stage-number-text-color: white;
+            --file-input-label-bg: #f1f3f5;
+            --file-input-label-hover-bg: #e9ecef;
+            --file-input-label-text-color: #495057;
+            --uploaded-image-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            --notes-input-border: #ced4da;
+            --project-info-bg-start: var(--heading-gradient-start);
+            --project-info-bg-end: var(--heading-gradient-end);
+            --project-info-text-color: white;
+            --project-info-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            --detail-item-bg: rgba(255, 255, 255, 0.15); 
+            --detail-label-opacity: 0.85;
+            --completion-button-bg: #2dce89; 
+            --completion-button-hover-bg: #27b374;
+            --completion-button-completed-bg: #8898aa;
+            --finish-project-button-bg: #2dce89;
+            --finish-project-button-hover-bg: #27b374;
+            --progress-bar-bg: #e9ecef;
+            --progress-fill-gradient-start: #2dce89;
+            --progress-fill-gradient-end: #27b374;
+            --progress-fill-text-color: white;
+            --project-item-bg: #ffffff;
+            --project-item-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+            --project-item-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --project-item-completed-border: #2dce89;
+            --project-item-in-progress-border: #fb6340; 
+            --project-item-subtext-color: #525f7f;
+            --project-item-meta-color: #8898aa;
+            --filter-section-bg: #f8f9fa;
+            --remove-stage-bg: #f5365c;
+            --remove-stage-hover-bg: #f41c47;
+            --delete-project-button-bg: #f5365c;
+            --delete-project-button-hover-bg: #f41c47;
+            --empty-state-color: #8898aa;
+            --back-button-bg: #8898aa;
+            --back-button-hover-bg: #525f7f;
+
+            --section-electronics-bg: #f5365c;
+            --section-3dprinting-bg: #2dce89;
+            --section-design-bg: #11cdef;
+            --section-cnclaser-bg: #fb6340;
+            --section-cncwood-bg: #8965e0;
+            --section-robotics-bg: #2bffc6;
+            --section-text-color: white;
+
+            --settings-bar-bg: #f7fafc;
+            --settings-label-color: #525f7f;
+            --settings-select-border: #dee2e6;
+            --settings-select-bg: white;
+            --settings-select-text-color: #32325d;
+
+            --warning-bg: #fff3cd;
+            --warning-border: #ffeeba;
+            --warning-text: #856404;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --error-bg: #f8d7da;
+            --error-border: #f5c6cb;
+            --error-text: #721c24;
+        }
+
+        body[data-theme="dark"] {
+            --body-bg: linear-gradient(135deg, #172b4d 0%, #1a174d 100%);
+            --container-bg: rgba(23, 43, 77, 0.9); 
+            --container-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --text-color: #e9ecef;
+            --tab-container-bg: #1e355b;
+            --tab-button-color: #adb5bd;
+            --tab-button-active-bg: #2a4365; 
+            --tab-button-active-color: #ffffff;
+            --tab-button-active-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            --form-section-bg: #1f3a61;
+            --form-section-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+            --label-color: #adb5bd;
+            --input-border-color: #2c4a76;
+            --input-bg: #172b4d;
+            --input-text-color: #e9ecef;
+            --input-focus-border-color: #5e72e4;
+            --input-focus-shadow: 0 0 0 0.2rem rgba(94, 114, 228, 0.3);
+            --button-disabled-bg: #324c75;
+            --stage-card-bg: #1f3a61;
+            --stage-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --stage-card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            --stage-card-completed-bg: #1a4f4a; 
+            --stage-card-completed-border: #2dce89;
+            --stage-dot-bg: #2a4365;
+            --stage-dot-border: #5e72e4;
+            --stage-dot-completed-bg: #2dce89;
+            --stage-dot-completed-border: #2dce89;
+            --file-input-label-bg: #2a4365;
+            --file-input-label-hover-bg: #324c75;
+            --file-input-label-text-color: #adb5bd;
+            --notes-input-border: #2c4a76;
+            --project-info-bg-start: #172b4d;
+            --project-info-bg-end: #1f3a61;
+            --project-info-text-color: #e9ecef;
+            --detail-item-bg: rgba(255, 255, 255, 0.08);
+            --detail-label-opacity: 0.75;
+            --progress-bar-bg: #172b4d;
+            --project-item-bg: #1f3a61;
+            --project-item-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+            --project-item-hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --project-item-completed-border: #2dce89;
+            --project-item-in-progress-border: #fb6340;
+            --project-item-subtext-color: #8898aa;
+            --project-item-meta-color: #adb5bd;
+            --filter-section-bg: #1e355b;
+            --empty-state-color: #8898aa;
+            --settings-bar-bg: #1e355b;
+            --settings-label-color: #adb5bd;
+            --settings-select-border: #2c4a76;
+            --settings-select-bg: #172b4d;
+            --settings-select-text-color: #e9ecef;
+            --delete-project-button-bg: #f41c47; 
+            --delete-project-button-hover-bg: #d1173c;
+
+            --warning-bg: #332b00;
+            --warning-border: #664d00;
+            --warning-text: #ffeb3b;
+            --success-bg: #0d4d20;
+            --success-border: #1e7e34;
+            --success-text: #b8e6c1;
+            --error-bg: #4d1319;
+            --error-border: #842029;
+            --error-text: #f8b2b7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background: var(--body-bg);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            font-size: 16px; 
+            line-height: 1.6; 
+        }
+        .container {
+            max-width: 1200px; margin: 20px auto; background: var(--container-bg); 
+            border-radius: 16px; 
+            padding: 30px; 
+            box-shadow: var(--container-shadow);
+            transition: background 0.3s ease;
+        }
+
+        /* Connection Status Styles */
+        .connection-status {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .connection-status.warning {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-text);
+        }
+        .connection-status.success {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success-text);
+        }
+        .connection-status.error {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error-text);
+        }
+
+        .header-logos {
+          display: flex;
+          justify-content: space-between; 
+          align-items: center; 
+          margin-bottom: 30px; 
+          padding-bottom: 20px; 
+          border-bottom: 1px solid var(--input-border-color);
+        }    
+        .logo-img {
+          max-height: 60px; 
+          max-width: 200px; 
+          object-fit: contain; 
+        } 
+
+        h1 {
+            color: var(--text-color); text-align: center; margin-bottom: 35px; font-size: 2.8em; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, var(--heading-gradient-start) 0%, var(--heading-gradient-end) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px; 
+        }
+        .settings-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px; padding: 12px 20px; background: var(--settings-bar-bg);
+            border-radius: 12px; flex-wrap: wrap; gap: 20px; 
+        }
+        .settings-bar div { display: flex; align-items: center; gap: 10px; }
+        .settings-bar label { color: var(--settings-label-color); font-weight: 600; font-size: 0.95em; }
+        .settings-bar select {
+            padding: 10px 15px; border: 1px solid var(--settings-select-border); 
+            border-radius: 8px; font-size: 1em; background: var(--settings-select-bg);
+            color: var(--settings-select-text-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+        }
+        .settings-bar select:focus {
+            border-color: var(--input-focus-border-color);
+            box-shadow: var(--input-focus-shadow);
+            outline: none;
+        }
+        .tab-container {
+            display: flex; gap: 0; margin-bottom: 35px; background: var(--tab-container-bg); 
+            padding: 6px; border-radius: 12px; 
+        }
+        .tab-button {
+            flex: 1; padding: 14px 20px; background: transparent; border: none;
+            border-radius: 8px; font-size: 1.05em; font-weight: 600; cursor: pointer; 
+            transition: all 0.25s ease-in-out; color: var(--tab-button-color);
+            position: relative;
+        }
+        .tab-button.active {
+            background: var(--tab-button-active-bg); color: var(--tab-button-active-color);
+            box-shadow: var(--tab-button-active-shadow);
+        }
+        .tab-button:not(.active):hover {
+            background-color: rgba(0,0,0,0.05); 
+        }
+        body[data-theme="dark"] .tab-button:not(.active):hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.5s ease-out; } 
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: var(--form-section-bg); padding: 30px; border-radius: 12px; 
+            margin-bottom: 35px; box-shadow: var(--form-section-shadow);
+        }
+        .form-section h2, .form-section h3 { color: var(--text-color); margin-bottom: 20px; font-weight: 600; }
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; margin-bottom: 25px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 8px; } 
+        label {
+            color: var(--label-color); font-weight: 500; 
+            font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.6px;
+        }
+        input, select, textarea.notes-input {
+            padding: 14px 18px; border: 1px solid var(--input-border-color); 
+            border-radius: 8px; font-size: 1em; transition: all 0.2s ease-in-out; 
+            background: var(--input-bg); color: var(--input-text-color);
+        }
+        textarea.notes-input { font-family: inherit; min-height: 100px; } 
+        input:focus, select:focus, textarea.notes-input:focus {
+            outline: none; border-color: var(--input-focus-border-color);
+            box-shadow: var(--input-focus-shadow); 
+        }
+        button {
+            background: linear-gradient(135deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+            color: var(--button-text-color); border: none; padding: 14px 28px; 
+            border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer;
+            transition: all 0.25s ease-in-out; text-transform: uppercase; letter-spacing: 0.8px; 
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); 
+        }
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: var(--button-hover-shadow); 
+        }
+        button:active {
+            transform: translateY(0px); 
+            box-shadow: 0 2px 4px rgba(50,50,93,0.1), 0 1px 2px rgba(0,0,0,0.07);
+        }
+        button:disabled {
+            background: var(--button-disabled-bg); cursor: not-allowed; transform: none; 
+            box-shadow: none; opacity: 0.65; 
+        }
+        
+        .timeline-container { margin-top: 40px; position: relative; padding: 20px 0; }
+        .timeline-line {
+            position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; 
+            background: linear-gradient(to bottom, var(--timeline-line-gradient-start), var(--timeline-line-gradient-end));
+            transform: translateX(-50%); border-radius: 2px; 
+        }
+        body[dir="rtl"] .timeline-line { left: auto; right: 50%; transform: translateX(50%); }
+        
+        .stage-card {
+            background: var(--stage-card-bg); border-radius: 12px; padding: 25px;
+            margin: 25px 0; position: relative; box-shadow: var(--stage-card-shadow);
+            transition: all 0.25s ease-in-out; width: 46%; 
+        }
+        .stage-card.completed {
+            background: var(--stage-card-completed-bg); border: 1px solid var(--stage-card-completed-border); 
+        }
+        .stage-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--stage-card-hover-shadow); } 
+        
+        .stage-card::before { 
+            content: ''; position: absolute; width: 18px; height: 18px; 
+            background: var(--stage-dot-bg); border: 3px solid var(--stage-dot-border);
+            border-radius: 50%; top: 28px; z-index: 1; 
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .stage-card:nth-child(odd) { margin-left: 0; margin-right: auto; }
+        .stage-card:nth-child(odd)::before {
+            left: 100%; transform: translateX(calc(-50% - 1.5px)); margin-left: calc(4% - 9px); 
+        }
+        .stage-card:nth-child(even) { margin-left: auto; margin-right: 0; }
+        .stage-card:nth-child(even)::before {
+            right: 100%; transform: translateX(calc(50% + 1.5px)); margin-right: calc(4% - 9px); 
+        }
+        body[dir="rtl"] .stage-card:nth-child(odd) { margin-left: auto; margin-right: 0; }
+        body[dir="rtl"] .stage-card:nth-child(odd)::before {
+            left: auto; right: 100%; transform: translateX(calc(50% + 1.5px));
+            margin-left: 0; margin-right: calc(4% - 9px);
+        }
+        body[dir="rtl"] .stage-card:nth-child(even) { margin-left: 0; margin-right: auto; }
+        body[dir="rtl"] .stage-card:nth-child(even)::before {
+            right: auto; left: 100%; transform: translateX(calc(-50% - 1.5px));
+            margin-right: 0; margin-left: calc(4% - 9px);
+        }
+        .stage-card.completed::before {
+            background: var(--stage-dot-completed-bg); border-color: var(--stage-dot-completed-border);
+        }
+
+        .stage-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; 
+        }
+        .stage-number {
+            background: linear-gradient(135deg, var(--stage-number-gradient-start) 0%, var(--stage-number-gradient-end) 100%);
+            color: var(--stage-number-text-color); padding: 6px 18px; border-radius: 20px; 
+            font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stage-section {
+            display: inline-block; padding: 6px 18px; border-radius: 20px;
+            font-size: 0.85em; font-weight: 600; margin-top: 12px; color: var(--section-text-color);
+            text-transform: capitalize;
+        }
+        
+        .file-input-wrapper label {
+            padding: 10px 18px; border-radius: 6px;
+        }
+        .uploaded-images { gap: 12px; margin-top: 12px; }
+        .uploaded-image {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 8px;
+            box-shadow: var(--uploaded-image-shadow); border: 1px solid var(--input-border-color); 
+        }
+        
+        .project-info {
+            background: linear-gradient(135deg, var(--project-info-bg-start) 0%, var(--project-info-bg-end) 100%);
+            color: var(--project-info-text-color); padding: 30px; border-radius: 12px;
+            margin-bottom: 35px; box-shadow: var(--project-info-shadow);
+        }
+        .project-info h2 { margin-bottom: 20px; font-size: 2em; color: var(--project-info-text-color); font-weight: 600;}
+        .project-details {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 18px; margin-top: 20px;
+        }
+        .detail-item {
+            background: var(--detail-item-bg); padding: 12px 18px;
+            border-radius: 8px; backdrop-filter: blur(5px); 
+        }
+        .detail-label { font-size: 0.9em; opacity: var(--detail-label-opacity); margin-bottom: 6px; }
+        .detail-value { font-size: 1.15em; font-weight: 600; }
+
+        .completion-button {
+            background: var(--completion-button-bg); font-size: 0.9em; padding: 10px 20px;
+        }
+        .completion-button.completed { background: var(--completion-button-completed-bg); }
+
+        .finish-project-button {
+            background: var(--finish-project-button-bg); font-size: 1.1em;
+            padding: 16px 45px; margin: 30px auto; display: block;
+        }
+        .progress-bar {
+            background: var(--progress-bar-bg); height: 28px; border-radius: 14px; 
+            overflow: hidden; margin: 25px 0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); 
+        }
+        .progress-fill {
+            background: linear-gradient(135deg, var(--progress-fill-gradient-start) 0%, var(--progress-fill-gradient-end) 100%);
+            height: 100%; display: flex; align-items: center; justify-content: center;
+            color: var(--progress-fill-text-color); font-weight: 600; 
+            transition: width 0.4s ease-in-out; 
+            font-size: 0.9em;
+        }
+
+        .project-list { display: grid; gap: 25px; }
+        .project-item {
+            background: var(--project-item-bg); padding: 25px; border-radius: 12px;
+            box-shadow: var(--project-item-shadow);
+            transition: all 0.25s ease-in-out; 
+            border-left: 6px solid transparent; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 20px;
+        }
+        body[dir="rtl"] .project-item { border-left: none; border-right: 6px solid transparent; flex-direction: row-reverse;}
+        
+        .project-item:hover { transform: translateY(-4px) scale(1.005); box-shadow: var(--project-item-hover-shadow); } 
+        .project-item.completed { border-left-color: var(--project-item-completed-border); }
+        body[dir="rtl"] .project-item.completed { border-right-color: var(--project-item-completed-border); border-left-color: transparent;}
+        .project-item.in-progress { border-left-color: var(--project-item-in-progress-border); }
+        body[dir="rtl"] .project-item.in-progress { border-right-color: var(--project-item-in-progress-border); border-left-color: transparent;}
+        
+        .project-header h3 { color: var(--text-color); font-size: 1.3em; font-weight: 600; margin-bottom: 5px;}
+        .project-header p { color: var(--project-item-subtext-color); font-size: 0.9em; }
+        .project-status {
+            padding: 6px 18px; border-radius: 20px; font-size: 0.8em;
+            font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        
+        .delete-project-button.icon-button {
+            background: var(--delete-project-button-bg);
+            color: var(--button-text-color);
+            padding: 10px; 
+            width: 40px; 
+            height: 40px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .delete-project-button.icon-button svg {
+            width: 20px; 
+            height: 20px;
+        }
+        .delete-project-button.icon-button:hover {
+            background: var(--delete-project-button-hover-bg);
+            transform: translateY(-1px) scale(1.05); 
+        }
+
+        .actions-bar {
+            margin-bottom: 25px; padding: 15px 0; 
+            gap: 15px;
+        }
+        .actions-bar > div label { text-transform: none; font-size: 1em; } 
+
+        .filter-section {
+            background: var(--filter-section-bg); padding: 25px; border-radius: 12px;
+            margin-bottom: 25px; display: flex; gap: 20px; flex-wrap: wrap;
+        }
+
+        @media (max-width: 992px) { 
+            .timeline-line { left: 25px; } 
+            body[dir="rtl"] .timeline-line { left: auto; right: 25px; }
+            .stage-card, body[dir="rtl"] .stage-card {
+                width: calc(100% - 45px); margin-left: 45px !important; margin-right: 0 !important; 
+            }
+            body[dir="rtl"] .stage-card { margin-left: 0 !important; margin-right: 45px !important; }
+            
+            .stage-card::before, body[dir="rtl"] .stage-card::before {
+                left: -9px; transform: translateX(-50%); margin-left: -20px; 
+            }
+            body[dir="rtl"] .stage-card::before {
+                left: auto; right: 100%; transform: translateX(calc(50% + 1.5px));
+                margin-left: 0; margin-right: calc(4% - 9px);
+            }
+             .stage-card:nth-child(even)::before, .stage-card:nth-child(odd)::before,
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                left: -9px; transform: translateX(-50%); margin-left: -20px;
+            }
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                left: auto; right: -9px; transform: translateX(50%); margin-left: 0; margin-right: -20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { 
+                padding: 15px; 
+                margin: 10px auto; 
+            }
+            .header-logos { 
+                flex-direction: column; 
+                gap: 15px; 
+                align-items: center; 
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            .logo-img { 
+                max-height: 50px; 
+                max-width: 180px; 
+            }
+            h1 { 
+                font-size: 1.8em; 
+                margin-bottom: 20px; 
+                letter-spacing: -0.2px;
+            }
+            .settings-bar {
+                flex-direction: column; 
+                align-items: stretch; 
+                gap: 15px;
+                padding: 15px;
+            }
+            .settings-bar div {
+                justify-content: space-between; 
+                width: 100%;
+            }
+            .settings-bar label {
+                font-size: 0.9em;
+            }
+            .settings-bar select {
+                font-size: 0.9em;
+                padding: 8px 10px;
+                flex-grow: 1; 
+                max-width: 60%; 
+            }
+            .tab-container {
+                flex-direction: column; 
+                gap: 8px; 
+                margin-bottom: 25px;
+            }
+            .tab-button {
+                font-size: 1em; 
+                padding: 12px 15px;
+            }
+            .form-section {
+                padding: 20px; 
+            }
+            .form-grid { 
+                grid-template-columns: 1fr; 
+                gap: 18px; 
+            }
+            input, select, textarea.notes-input { 
+                padding: 12px 15px;
+                font-size: 0.95em;
+            }
+            button { 
+                padding: 12px 20px;
+                font-size: 0.95em;
+            }
+            .timeline-line { left: 20px; transform: translateX(0); } 
+            body[dir="rtl"] .timeline-line { left: auto; right: 20px; transform: translateX(0); }
+            .stage-card, body[dir="rtl"] .stage-card {
+                width: calc(100% - 35px); margin-left: 35px !important; margin-right: 0 !important; 
+            }
+            body[dir="rtl"] .stage-card { margin-left: 0 !important; margin-right: 35px !important; }
+            .stage-card::before, body[dir="rtl"] .stage-card::before {
+                width: 16px; height: 16px; border-width: 2px; 
+                left: -8px; transform: translateX(-50%); margin-left: -15px; 
+                top: 24px;
+            }
+            body[dir="rtl"] .stage-card::before {
+                left: auto; right: -8px; transform: translateX(50%); margin-left: 0; margin-right: -15px;
+            }
+             .stage-card:nth-child(even)::before, .stage-card:nth-child(odd)::before,
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                left: -8px; transform: translateX(-50%); margin-left: -15px;
+            }
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                left: auto; right: -8px; transform: translateX(50%); margin-left: 0; margin-right: -15px;
+            }
+            .stage-card {
+                padding: 20px; 
+            }
+            .stage-header {
+                flex-direction: column; 
+                align-items: flex-start;
+                gap: 10px;
+            }
+            body[dir="rtl"] .stage-header {
+                align-items: flex-end;
+            }
+            .stage-actions {
+                width: 100%; 
+                display: flex;
+                justify-content: space-between; 
+            }
+            body[dir="rtl"] .stage-actions {
+                 flex-direction: row; 
+            }
+            .completion-button, .remove-stage {
+                flex-grow: 1; 
+                margin: 5px 2px !important; 
+            }
+            .project-details { 
+                grid-template-columns: 1fr; 
+            }
+            .project-item {
+                padding: 15px; 
+                gap: 10px;
+            }
+            .project-header {
+                flex-direction: column; 
+                align-items: flex-start;
+                gap: 8px;
+            }
+             body[dir="rtl"] .project-header {
+                align-items: flex-end;
+            }
+            .project-header h3 { font-size: 1.15em; }
+            .project-status { align-self: flex-start; } 
+             body[dir="rtl"] .project-status { align-self: flex-end; }
+            .delete-project-button.icon-button { 
+                width: 34px;
+                height: 34px;
+            }
+            .delete-project-button.icon-button svg {
+                width: 16px;
+                height: 16px;
+            }
+            .filter-section { 
+                flex-direction: column; 
+                padding: 20px;
+            }
+            .filter-group {
+                min-width: unset; 
+                width: 100%;
+            }
+            .actions-bar { 
+                justify-content: center; 
+                flex-direction: column; 
+                gap: 15px;
+            } 
+            .actions-bar > div { 
+                width: 100%;
+                justify-content: center;
+            }
+            .actions-bar button { 
+                width: 100%;
+                max-width: 250px; 
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                border-radius: 10px; 
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            .tab-button {
+                font-size: 0.9em;
+                padding: 10px 12px;
+            }
+            .settings-bar div {
+                flex-direction: column; 
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .settings-bar select {
+                width: 100%; 
+                max-width: none;
+            }
+            .stage-card {
+                 width: calc(100% - 30px); margin-left: 30px !important;
+            }
+             body[dir="rtl"] .stage-card { margin-left: 0 !important; margin-right: 30px !important; }
+
+            .timeline-line { left: 15px; }
+            body[dir="rtl"] .timeline-line { left: auto; right: 15px; }
+
+             .stage-card::before, body[dir="rtl"] .stage-card::before {
+                margin-left: -12px; 
+            }
+            body[dir="rtl"] .stage-card::before {
+                 margin-right: -12px;
+            }
+             .stage-card:nth-child(even)::before, .stage-card:nth-child(odd)::before,
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                margin-left: -12px;
+            }
+            body[dir="rtl"] .stage-card:nth-child(even)::before, body[dir="rtl"] .stage-card:nth-child(odd)::before {
+                 margin-right: -12px;
+            }
+        }
+        
+        .remove-stage { background: var(--remove-stage-bg); font-size: 0.85em; padding: 8px 15px; }
+        .remove-stage:hover { background: var(--remove-stage-hover-bg); }
+        .stage-actions { display: flex; align-items: center; gap: 5px;}
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--empty-state-color); background: var(--form-section-bg); border-radius: 12px; }
+        .empty-state h3 { font-size: 1.4em; margin-bottom: 12px; color: var(--empty-state-color); font-weight: 600;}
+        .empty-state p { color: var(--empty-state-color); font-size: 1em; }
+        .back-button { background: var(--back-button-bg); font-size: 0.9em; padding: 10px 22px; }
+        .back-button:hover { background: var(--back-button-hover-bg); }
+        body[dir="rtl"] .form-group, body[dir="rtl"] .project-header div:not(.project-item-actions), body[dir="rtl"] .filter-group { text-align: right; }
+        body[dir="rtl"] label { text-align: right; display: block; }
+        body[dir="rtl"] .detail-label, body[dir="rtl"] .detail-value { text-align: right; }
+        body[dir="rtl"] .project-header { flex-direction: row-reverse; }
+        body[dir="rtl"] .stage-header { flex-direction: column; align-items: flex-end; } 
+        body[dir="rtl"] .stage-actions { flex-direction: row-reverse; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Connection Status Alert -->
+        <div id="connectionStatus" class="connection-status warning">
+            ⚠️ Working in offline mode - data is stored locally only
+        </div>
+
+        <div class="header-logos">
+            <img src="/images/fablab_logo.jpeg" alt="FabLab Logo" class="logo-img" 
+                 onerror="this.style.display='none'; console.warn('FabLab Logo not found. Expected at: /images/fablab_logo.jpeg.')">
+            <img src="/images/alrashed_logo.png" alt="Al Rashed Logo" class="logo-img"
+                 onerror="this.style.display='none'; console.warn('Al Rashed Logo not found. Expected at: /images/alrashed_logo.png.')">
+        </div>
+
+        <div class="settings-bar">
+            <div>
+                <label for="languageSelector" data-translate="selectLanguage">Language:</label>
+                <select id="languageSelector" onchange="setLanguage(this.value)">
+                    <option value="en" data-translate="english">English</option>
+                    <option value="ar" data-translate="arabic">Arabic</option>
+                </select>
+            </div>
+            <div>
+                <label for="themeSelector" data-translate="selectTheme">Theme:</label>
+                <select id="themeSelector" onchange="setTheme(this.value)">
+                    <option value="light" data-translate="lightTheme">Light</option>
+                    <option value="dark" data-translate="darkTheme">Dark</option>
+                </select>
+            </div>
+            <div>
+                <label for="apiUrlInput">API URL:</label>
+                <input type="url" id="apiUrlInput" placeholder="https://your-api.herokuapp.com" style="padding: 8px 12px; border-radius: 6px; border: 1px solid var(--input-border-color); background: var(--input-bg); color: var(--input-text-color);" onchange="updateApiUrl(this.value)">
+                <button onclick="testConnection()" style="padding: 8px 16px; margin: 0; font-size: 0.9em;">Test</button>
+            </div>
+        </div>
+
+        <h1 data-translate="projectTimelineMonitor">Project Timeline Monitor</h1>
+        
+        <div class="tab-container">
+            <button class="tab-button active" onclick="switchTab('new-project', event)" data-translate="newProjectTab">New Project</button>
+            <button class="tab-button" onclick="switchTab('project-history', event)" data-translate="projectHistoryTab">Project History</button>
+        </div>
+
+        <div id="new-project" class="tab-content active">
+            <div class="form-section" id="projectForm">
+                <h2 data-translate="projectInformation">Project Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="userID" data-translate="userIDLabel">User ID</label>
+                        <input type="text" id="userID" data-translate-placeholder="userIDPlaceholder" placeholder="Enter user ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectName" data-translate="projectNameLabel">Project Name</label>
+                        <input type="text" id="projectName" data-translate-placeholder="projectNamePlaceholder" placeholder="Enter project name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" data-translate="yourNameLabel">Your Name</label>
+                        <input type="text" id="userName" data-translate-placeholder="yourNamePlaceholder" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-translate="emailLabel">Email</label>
+                        <input type="email" id="email" data-translate-placeholder="emailPlaceholder" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" data-translate="phoneLabel">Phone Number</label>
+                        <input type="tel" id="phone" data-translate-placeholder="phonePlaceholder" placeholder="Enter phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate" data-translate="startDateLabel">Project Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate" data-translate="endDateLabel">Project End Date</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                </div>
+                <button type="button" onclick="createProject()" data-translate="createProjectButton">Create Project</button>
+            </div>
+
+            <div id="projectDisplay" style="display: none;">
+                <button class="back-button" onclick="backToForm()" data-translate="backToProjectsButton">Back to Projects</button>
+                <div id="projectInfo" class="project-info"></div>
+                
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 0%">0%</div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 data-translate="addProjectStage">Add Project Stage</h3>
+                    <button onclick="addStage()" data-translate="addNewStageButton">Add New Stage</button>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div id="timeline"></div>
+                </div>
+
+                <button id="finishProjectBtn" class="finish-project-button" onclick="finishProject()" data-translate="finishProjectButton" disabled>
+                    Finish Project
+                </button>
+            </div>
+        </div>
+
+        <div id="project-history" class="tab-content">
+            <div class="actions-bar">
+                <div>
+                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)">
+                    <label for="selectAllCheckbox" data-translate="selectAllLabel">Select All</label>
+                </div>
+                <button onclick="downloadProjectsCSV()" data-translate="downloadCSVButton">Download CSV</button>
+            </div>
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="filterUserID" data-translate="filterByUserIDLabel">Filter by User ID</label>
+                    <input type="text" id="filterUserID" data-translate-placeholder="userIDPlaceholder" placeholder="Enter user ID" onkeyup="filterProjects()">
+                </div>
+                <div class="filter-group">
+                    <label for="filterUserName" data-translate="filterByUserNameLabel">Filter by User Name</label>
+                    <input type="text" id="filterUserName" data-translate-placeholder="yourNamePlaceholder" placeholder="Enter user name" onkeyup="filterProjects()">
+                </div>
+                <div class="filter-group">
+                    <label for="filterProjectName" data-translate="filterByProjectNameLabel">Filter by Project Name</label>
+                    <input type="text" id="filterProjectName" data-translate-placeholder="projectNamePlaceholder" placeholder="Enter project name" onkeyup="filterProjects()">
+                </div>
+            </div>
+            <div id="projectList" class="project-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration and State Management
+        let API_BASE_URL = localStorage.getItem('apiBaseUrl') || '';
+        let isOnlineMode = false;
+        let connectionTested = false;
+
+        const translations = {
+            en: {
+                "projectTimelineMonitor": "Project Timeline Monitor", "newProjectTab": "New Project", "projectHistoryTab": "Project History", "selectLanguage": "Language:", "selectTheme": "Theme:", "lightTheme": "Light", "darkTheme": "Dark", "projectInformation": "Project Information", "userIDLabel": "User ID", "userIDPlaceholder": "Enter user ID", "projectNameLabel": "Project Name", "projectNamePlaceholder": "Enter project name", "yourNameLabel": "Your Name", "yourNamePlaceholder": "Enter your name", "emailLabel": "Email", "emailPlaceholder": "Enter your email", "phoneLabel": "Phone Number", "phonePlaceholder": "Enter phone number", "startDateLabel": "Project Start Date", "endDateLabel": "Project End Date", "createProjectButton": "Create Project", "backToProjectsButton": "Back to Projects", "addProjectStage": "Add Project Stage", "addNewStageButton": "Add New Stage", "stagePrefix": "Stage ", "markAsCompleteButton": "Mark as Complete", "completedButton": "Completed ✓", "removeButton": "Remove", "sectionLabel": "Section", "chooseSectionOption": "Choose a section", "electronicsOption": "Electronics", "3dPrintingOption": "3D Printing", "designOption": "Design", "cncLaserOption": "CNC Laser", "cncWoodOption": "CNC Wood", "roboticsOption": "Robotics", "stageNotesLabel": "Stage Notes", "stageNotesPlaceholder": "Add notes for this stage...", "uploadImagesLabel": "Upload Images", "chooseImagesButton": "Choose Images", "stageCompletedButtonLabel": "Stage Completed", "finishProjectButton": "Finish Project", "projectCompletedHeader": "Project Completed", "projectManagerLabel": "Project Manager", "phoneLabelInfo": "Phone", "startDateLabelInfo": "Start Date", "endDateLabelInfo": "End Date", "filterByUserIDLabel": "Filter by User ID", "filterByUserNameLabel": "Filter by User Name", "filterByProjectNameLabel": "Filter by Project Name", "noProjectsFound": "No projects found", "noProjectsHint": "Create your first project or adjust your filters", "createdDatePrefix": "Created:", "completedDatePrefix": "Completed:", "progressLabel": "Progress:", "stagesSuffix": "stages", "statusInProgress": "In Progress", "statusCompleted": "Completed", "fillAllFieldsError": "Please fill in all fields", "errorCreatingProject": "Error creating project: ", "confirmFinishProject": "Are you sure you want to finish this project? This action cannot be undone.", "projectCompletedSuccess": "Project completed successfully!", "english": "English", "arabic": "Arabic",
+                "deleteProjectButton": "Delete Project", "confirmDeleteProject": "Are you sure you want to delete this project? This action cannot be undone.", "projectDeletedSuccess": "Project deleted successfully.", "downloadCSVButton": "Download Selected CSV", "selectAllLabel": "Select All / Deselect All", "pleaseSelectProjects": "Please select projects to download.",
+                "csvHeaderProjectId": "Project ID", "csvHeaderUserId": "User ID", "csvHeaderProjectName": "Project Name", "csvHeaderUserName": "Manager Name", "csvHeaderEmail": "Email", "csvHeaderPhone": "Phone", "csvHeaderStartDate": "Start Date", "csvHeaderEndDate": "End Date", "csvHeaderStatus": "Status", "csvHeaderCreatedAt": "Created At", "csvHeaderCompletedAt": "Completed At", "csvHeaderTotalStages": "Total Stages", "csvHeaderCompletedStages": "Completed Stages",
+                "connectionTestSuccess": "✅ Connection successful! Data will be synced to server.", "connectionTestFailed": "❌ Connection failed. Working in offline mode.", "offlineMode": "⚠️ Working in offline mode - data is stored locally only", "onlineMode": "✅ Connected to server - data is being synced"
+            },
+            ar: {
+                "projectTimelineMonitor": "مراقب الجدول الزمني للمشروع", "newProjectTab": "مشروع جديد", "projectHistoryTab": "سجل المشاريع", "selectLanguage": "اللغة:", "selectTheme": "السمة:", "lightTheme": "فاتح", "darkTheme": "داكن", "projectInformation": "معلومات المشروع", "userIDLabel": "معرف المستخدم", "userIDPlaceholder": "أدخل معرف المستخدم", "projectNameLabel": "اسم المشروع", "projectNamePlaceholder": "أدخل اسم المشروع", "yourNameLabel": "اسمك", "yourNamePlaceholder": "أدخل اسمك", "emailLabel": "البريد الإلكتروني", "emailPlaceholder": "أدخل بريدك الإلكتروني", "phoneLabel": "رقم الهاتف", "phonePlaceholder": "أدخل رقم الهاتف", "startDateLabel": "تاريخ بدء المشروع", "endDateLabel": "تاريخ انتهاء المشروع", "createProjectButton": "إنشاء مشروع", "backToProjectsButton": "العودة للمشاريع", "addProjectStage": "إضافة مرحلة للمشروع", "addNewStageButton": "إضافة مرحلة جديدة", "stagePrefix": "مرحلة ", "markAsCompleteButton": "وضع علامة كمكتمل", "completedButton": "مكتمل ✓", "removeButton": "إزالة", "sectionLabel": "القسم", "chooseSectionOption": "اختر قسمًا", "electronicsOption": "إلكترونيات", "3dPrintingOption": "طباعة ثلاثية الأبعاد", "designOption": "تصميم", "cncLaserOption": "ليزر CNC", "cncWoodOption": "خشب CNC", "roboticsOption": "روبوتات", "stageNotesLabel": "ملاحظات المرحلة", "stageNotesPlaceholder": "أضف ملاحظات لهذه المرحلة...", "uploadImagesLabel": "تحميل الصور", "chooseImagesButton": "اختر الصور", "stageCompletedButtonLabel": "المرحلة مكتملة", "finishProjectButton": "إنهاء المشروع", "projectCompletedHeader": "المشروع مكتمل", "projectManagerLabel": "مدير المشروع", "phoneLabelInfo": "الهاتف", "startDateLabelInfo": "تاريخ البدء", "endDateLabelInfo": "تاريخ الانتهاء", "filterByUserIDLabel": "تصفية حسب معرّف المستخدم", "filterByUserNameLabel": "تصفية حسب اسم المستخدم", "filterByProjectNameLabel": "تصفية حسب اسم المشروع", "noProjectsFound": "لم يتم العثور على مشاريع", "noProjectsHint": "أنشئ مشروعك الأول أو اضبط عوامل التصفية", "createdDatePrefix": "أنشئ:", "completedDatePrefix": "اكتمل:", "progressLabel": "التقدم:", "stagesSuffix": "مراحل", "statusInProgress": "قيد التنفيذ", "statusCompleted": "مكتمل", "fillAllFieldsError": "يرجى ملء جميع الحقول", "errorCreatingProject": "خطأ في إنشاء المشروع: ", "confirmFinishProject": "هل أنت متأكد أنك تريد إنهاء هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.", "projectCompletedSuccess": "اكتمل المشروع بنجاح!", "english": "الإنجليزية", "arabic": "العربية",
+                "deleteProjectButton": "حذف المشروع", "confirmDeleteProject": "هل أنت متأكد أنك تريد حذف هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.", "projectDeletedSuccess": "تم حذف المشروع بنجاح.", "downloadCSVButton": "تحميل المحدد CSV", "selectAllLabel": "تحديد الكل / إلغاء تحديد الكل", "pleaseSelectProjects": "يرجى تحديد مشاريع لتنزيلها.",
+                "csvHeaderProjectId": "معرف المشروع", "csvHeaderUserId": "معرف المستخدم", "csvHeaderProjectName": "اسم المشروع", "csvHeaderUserName": "اسم المدير", "csvHeaderEmail": "البريد الإلكتروني", "csvHeaderPhone": "الهاتف", "csvHeaderStartDate": "تاريخ البدء", "csvHeaderEndDate": "تاريخ الانتهاء", "csvHeaderStatus": "الحالة", "csvHeaderCreatedAt": "تاريخ الإنشاء", "csvHeaderCompletedAt": "تاريخ الإكمال", "csvHeaderTotalStages": "إجمالي المراحل", "csvHeaderCompletedStages": "المراحل المكتملة",
+                "connectionTestSuccess": "✅ تم الاتصال بنجاح! سيتم مزامنة البيانات مع الخادم.", "connectionTestFailed": "❌ فشل الاتصال. العمل في وضع عدم الاتصال.", "offlineMode": "⚠️ العمل في وضع عدم الاتصال - يتم تخزين البيانات محليًا فقط", "onlineMode": "✅ متصل بالخادم - يتم مزامنة البيانات"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'en';
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        let currentProject = null;
+        let projects = []; 
+        let stageCount = 0;
+
+        // Connection Management Functions
+        function updateConnectionStatus(isOnline, message = '') {
+            const statusEl = document.getElementById('connectionStatus');
+            if (isOnline) {
+                statusEl.className = 'connection-status success';
+                statusEl.textContent = message || translate('onlineMode');
+            } else {
+                statusEl.className = 'connection-status warning';
+                statusEl.textContent = message || translate('offlineMode');
+            }
+            isOnlineMode = isOnline;
+        }
+
+        function updateApiUrl(url) {
+            API_BASE_URL = url.trim();
+            localStorage.setItem('apiBaseUrl', API_BASE_URL);
+            if (API_BASE_URL) {
+                testConnection();
+            } else {
+                updateConnectionStatus(false);
+            }
+        }
+
+        async function testConnection() {
+            if (!API_BASE_URL) {
+                updateConnectionStatus(false, translate('offlineMode'));
+                return false;
+            }
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+                const response = await fetch(`${API_BASE_URL}/api/projects`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    updateConnectionStatus(true, translate('connectionTestSuccess'));
+                    connectionTested = true;
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.warn('Connection test failed:', error.message);
+                updateConnectionStatus(false, translate('connectionTestFailed'));
+                connectionTested = true;
+                return false;
+            }
+        }
+
+        // Local Storage Management
+        function loadProjectsFromLocalStorage() {
+            try {
+                const stored = localStorage.getItem('projects');
+                if (stored) {
+                    projects = JSON.parse(stored);
+                    console.log('Projects loaded from localStorage:', projects.length);
+                }
+            } catch (error) {
+                console.error('Error loading projects from localStorage:', error);
+                projects = [];
+            }
+        }
+
+        function saveProjectsToLocalStorage() {
+            try {
+                localStorage.setItem('projects', JSON.stringify(projects));
+                console.log('Projects saved to localStorage:', projects.length);
+            } catch (error) {
+                console.error('Error saving projects to localStorage:', error);
+            }
+        }
+
+        // API Functions with Fallback
+        async function loadProjectsFromDB() {
+            if (!isOnlineMode) {
+                loadProjectsFromLocalStorage();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/projects`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const serverProjects = await response.json();
+                projects = serverProjects; 
+                saveProjectsToLocalStorage(); // Backup to localStorage
+                console.log("Projects loaded from server:", projects.length);
+            } catch (error) {
+                console.error('Error loading projects from server:', error);
+                loadProjectsFromLocalStorage(); // Fallback to localStorage
+                updateConnectionStatus(false, 'Server unavailable - using local data');
+            }
+        }
+
+        async function saveProject() {
+            if (!currentProject) return;
+
+            // Always save to localStorage first
+            const projectIndex = projects.findIndex(p => p.id === currentProject.id);
+            if (projectIndex > -1) {
+                projects[projectIndex] = { ...currentProject };
+            } else {
+                projects.push({ ...currentProject });
+            }
+            saveProjectsToLocalStorage();
+
+            // Try to sync with server if online
+            if (isOnlineMode && API_BASE_URL) {
+                try {
+                    let response;
+                    if (currentProject._isUpdating) { 
+                        response = await fetch(`${API_BASE_URL}/api/projects/${currentProject.id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(currentProject) 
+                        });
+                    } else {
+                        response = await fetch(`${API_BASE_URL}/api/projects`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(currentProject)
+                        });
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+
+                    const serverResponse = await response.json();
+                    console.log('Project synced with server successfully');
+                    currentProject._isUpdating = true;
+                    
+                } catch (error) {
+                    console.warn('Failed to sync with server, data saved locally:', error.message);
+                    updateConnectionStatus(false, 'Sync failed - data saved locally');
+                }
+            }
+        }
+
+        async function deleteProject(projectId, event) {
+            event.stopPropagation(); 
+            if (confirm(translate('confirmDeleteProject'))) {
+                // Always remove from local storage first
+                projects = projects.filter(p => p.id !== projectId);
+                saveProjectsToLocalStorage();
+
+                // Try to delete from server if online
+                if (isOnlineMode && API_BASE_URL) {
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/api/projects/${projectId}`, { 
+                            method: 'DELETE' 
+                        });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        console.log('Project deleted from server successfully');
+                    } catch (error) {
+                        console.warn('Failed to delete from server, deleted locally:', error.message);
+                        updateConnectionStatus(false, 'Delete failed on server - removed locally');
+                    }
+                }
+
+                // Update UI
+                if (document.getElementById('project-history').classList.contains('active')) {
+                     loadProjectHistory(); 
+                }
+                alert(translate('projectDeletedSuccess'));
+                if (currentProject && currentProject.id === projectId) {
+                    backToForm(); 
+                }
+            }
+        }
+        
+        async function switchTab(tabName, event) { 
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                 document.querySelectorAll('.tab-button').forEach(btn => {
+                    const key = btn.getAttribute('data-translate');
+                    if ((tabName === 'new-project' && key === 'newProjectTab') ||
+                        (tabName === 'project-history' && key === 'projectHistoryTab')) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            document.getElementById(tabName).classList.add('active');
+            if (tabName === 'project-history') {
+                await loadProjectsFromDB(); 
+                loadProjectHistory();       
+            }
+        }
+
+        function translate(key, ...args) {
+            let translatedString = translations[currentLanguage]?.[key] || translations.en[key] || key;
+            if (args.length > 0) {
+                args.forEach((arg, index) => {
+                    translatedString = translatedString.replace(`{${index}}`, arg);
+                });
+            }
+            return translatedString;
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                el.textContent = translate(key);
+            });
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-translate-placeholder');
+                el.placeholder = translate(key);
+            });
+            const titleKey = document.titleElement?.getAttribute('data-translate');
+            if (titleKey) document.title = translate(titleKey);
+            if (currentProject) {
+                displayProjectInfo(); 
+                renderTimeline(); 
+            }
+            if (document.getElementById('project-history').classList.contains('active')) {
+                loadProjectHistory(); 
+            }
+            updateConnectionStatus(isOnlineMode); // Refresh connection status text
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            applyTranslations();
+            document.getElementById('languageSelector').value = lang; 
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('theme', theme);
+            document.body.setAttribute('data-theme', theme);
+            document.getElementById('themeSelector').value = theme;
+        }
+
+        function createProject() {
+            try {
+                const userID = document.getElementById('userID').value.trim();
+                const projectName = document.getElementById('projectName').value.trim();
+                const userName = document.getElementById('userName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                if (!userID || !projectName || !userName || !email || !phone || !startDate || !endDate) {
+                    alert(translate('fillAllFieldsError'));
+                    return;
+                }
+                currentProject = {
+                    id: `proj-${Date.now().toString()}-${Math.random().toString(36).substr(2, 5)}`,
+                    userID, projectName, userName, email, phone, startDate, endDate,
+                    stages: [], status: 'in-progress', createdAt: new Date().toISOString(), completedAt: null,
+                    _isUpdating: false 
+                };
+                stageCount = 0;
+                displayProjectInfo();
+                document.getElementById('projectForm').style.display = 'none';
+                document.getElementById('projectDisplay').style.display = 'block';
+                document.querySelector('#projectDisplay .form-section h3').textContent = translate('addProjectStage');
+                document.querySelector('#projectDisplay .form-section button[onclick="addStage()"]').style.display = 'block';
+                document.getElementById('finishProjectBtn').style.display = 'block';
+                saveProject(); 
+                applyTranslations(); 
+            } catch (error) {
+                console.error('Error creating project:', error);
+                alert(translate('errorCreatingProject') + error.message);
+            }
+        }
+
+        function displayProjectInfo() {
+            const projectInfoEl = document.getElementById('projectInfo');
+            if (!currentProject) { 
+                projectInfoEl.innerHTML = '';
+                return;
+            }
+            projectInfoEl.innerHTML = `
+                <h2>${currentProject.projectName}</h2>
+                <div class="project-details">
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('userIDLabel')}</div>
+                        <div class="detail-value">${currentProject.userID}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('projectManagerLabel')}</div>
+                        <div class="detail-value">${currentProject.userName}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('emailLabel')}</div>
+                        <div class="detail-value">${currentProject.email}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('phoneLabelInfo')}</div>
+                        <div class="detail-value">${currentProject.phone}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('startDateLabelInfo')}</div>
+                        <div class="detail-value">${new Date(currentProject.startDate).toLocaleDateString(currentLanguage === 'ar' ? 'ar-EG' : 'en-US')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">${translate('endDateLabelInfo')}</div>
+                        <div class="detail-value">${new Date(currentProject.endDate).toLocaleDateString(currentLanguage === 'ar' ? 'ar-EG' : 'en-US')}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addStage() {
+            if (!currentProject || currentProject.status === 'completed') return;
+            stageCount = currentProject.stages.length + 1; 
+            const stageId = `stage-${Date.now()}-${stageCount}`;
+            const stage = { 
+                id: stageId, 
+                number: 0, 
+                section: '', 
+                notes: '', 
+                images: [], 
+                completed: false 
+            };
+            currentProject.stages.push(stage);
+            currentProject.stages.forEach((s, index) => s.number = index + 1);
+            stageCount = currentProject.stages.length;
+            renderTimeline();
+            saveProject();
+        }
+
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+            if (!currentProject || !currentProject.stages) return;
+            currentProject.stages.forEach((stage) => { 
+                const stageCard = document.createElement('div');
+                stageCard.className = `stage-card ${stage.completed ? 'completed' : ''}`;
+                stageCard.innerHTML = `
+                    <div class="stage-header">
+                        <span class="stage-number">${translate('stagePrefix')}${stage.number}</span>
+                        <div class="stage-actions">
+                            <button class="completion-button ${stage.completed ? 'completed' : ''}" 
+                                onclick="toggleStageCompletion('${stage.id}')" ${currentProject.status === 'completed' ? 'disabled' : ''}>
+                                ${stage.completed ? translate('completedButton') : translate('markAsCompleteButton')}
+                            </button>
+                            <button class="remove-stage" onclick="removeStage('${stage.id}')" ${currentProject.status === 'completed' ? 'disabled' : ''}>${translate('removeButton')}</button>
+                        </div>
+                    </div>
+                    <div class="stage-content">
+                        <div class="form-group">
+                            <label>${translate('sectionLabel')}</label>
+                            <select onchange="updateStageSection('${stage.id}', this.value)" ${stage.completed || currentProject.status === 'completed' ? 'disabled' : ''}>
+                                <option value="">${translate('chooseSectionOption')}</option>
+                                <option value="Electronics" ${stage.section === 'Electronics' ? 'selected' : ''}>${translate('electronicsOption')}</option>
+                                <option value="3D printing" ${stage.section === '3D printing' ? 'selected' : ''}>${translate('3dPrintingOption')}</option>
+                                <option value="Design" ${stage.section === 'Design' ? 'selected' : ''}>${translate('designOption')}</option>
+                                <option value="CNC laser" ${stage.section === 'CNC laser' ? 'selected' : ''}>${translate('cncLaserOption')}</option>
+                                <option value="CNC Wood" ${stage.section === 'CNC Wood' ? 'selected' : ''}>${translate('cncWoodOption')}</option>
+                                <option value="Robotics" ${stage.section === 'Robotics' ? 'selected' : ''}>${translate('roboticsOption')}</option>
+                            </select>
+                        </div>
+                        ${stage.section ? `<span class="stage-section section-${stage.section.toLowerCase().replace(/\s+/g, '')}">${translate(stage.section.toLowerCase().replace(/\s+/g, '') + 'Option') || stage.section}</span>` : ''}
+                        <div class="form-group">
+                            <label>${translate('stageNotesLabel')}</label>
+                            <textarea class="notes-input" placeholder="${translate('stageNotesPlaceholder')}" 
+                                onchange="updateStageNotes('${stage.id}', this.value)" 
+                                ${stage.completed || currentProject.status === 'completed' ? 'disabled' : ''}>${stage.notes || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>${translate('uploadImagesLabel')}</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="file-${stage.id}" accept="image/*" multiple 
+                                    onchange="handleImageUpload('${stage.id}', this)" 
+                                    ${stage.completed || currentProject.status === 'completed' ? 'disabled' : ''}>
+                                <label for="file-${stage.id}">${(stage.completed || currentProject.status === 'completed') ? translate('stageCompletedButtonLabel') : translate('chooseImagesButton')}</label>
+                            </div>
+                            <div class="uploaded-images" id="images-${stage.id}">
+                                ${(stage.images || []).map(img => `<img src="${img}" class="uploaded-image">`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                timeline.appendChild(stageCard);
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            if (!currentProject || !currentProject.stages) return;
+            const completedStages = currentProject.stages.filter(s => s.completed).length;
+            const totalStages = currentProject.stages.length;
+            const percentage = totalStages > 0 ? Math.round((completedStages / totalStages) * 100) : 0;
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) {
+                progressFill.style.width = `${percentage}%`;
+                progressFill.textContent = `${percentage}%`;
+            }
+            const finishBtn = document.getElementById('finishProjectBtn');
+            if (finishBtn) {
+                finishBtn.disabled = totalStages === 0 || completedStages !== totalStages || currentProject.status === 'completed';
+            }
+        }
+
+        function toggleStageCompletion(stageId) {
+            const stage = currentProject.stages.find(s => s.id === stageId);
+            if (stage && currentProject.status !== 'completed') {
+                stage.completed = !stage.completed;
+                renderTimeline();
+                saveProject();
+            }
+        }
+
+        function updateStageSection(stageId, section) {
+            const stage = currentProject.stages.find(s => s.id === stageId);
+            if (stage && !stage.completed && currentProject.status !== 'completed') {
+                stage.section = section;
+                renderTimeline(); 
+                saveProject();
+            }
+        }
+
+        function updateStageNotes(stageId, notes) {
+            const stage = currentProject.stages.find(s => s.id === stageId);
+            if (stage && !stage.completed && currentProject.status !== 'completed') {
+                stage.notes = notes;
+                saveProject(); 
+            }
+        }
+
+        function handleImageUpload(stageId, input) {
+            const stage = currentProject.stages.find(s => s.id === stageId);
+            if (!stage || stage.completed || currentProject.status === 'completed') return;
+            const files = Array.from(input.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (!stage.images) stage.images = []; 
+                    stage.images.push(e.target.result);
+                    renderTimeline(); 
+                    saveProject();
+                };
+                reader.readAsDataURL(file);
+            });
+            input.value = ''; 
+        }
+
+        function removeStage(stageId) {
+            if (!currentProject || currentProject.status === 'completed') return;
+            currentProject.stages = currentProject.stages.filter(s => s.id !== stageId);
+            currentProject.stages.forEach((stage, index) => { stage.number = index + 1; });
+            stageCount = currentProject.stages.length;
+            renderTimeline();
+            saveProject();
+        }
+
+        function finishProject() {
+            if (confirm(translate('confirmFinishProject'))) {
+                currentProject.status = 'completed';
+                currentProject.completedAt = new Date().toISOString();
+                saveProject();
+                alert(translate('projectCompletedSuccess'));
+                backToForm();
+            }
+        }
+
+        function backToForm() {
+            document.getElementById('projectForm').style.display = 'block';
+            document.getElementById('projectDisplay').style.display = 'none';
+            document.getElementById('projectForm').reset();
+            currentProject = null;
+            stageCount = 0;
+            document.getElementById('timeline').innerHTML = '';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressFill').textContent = '0%';
+            document.getElementById('finishProjectBtn').disabled = true;
+            applyTranslations();
+        }
+
+        function loadProjectHistory() {
+            const projectList = document.getElementById('projectList');
+            const filteredProjects = getFilteredProjects(); 
+            if (filteredProjects.length === 0) {
+                projectList.innerHTML = `
+                    <div class="empty-state">
+                        <h3 data-translate="noProjectsFound">${translate('noProjectsFound')}</h3>
+                        <p data-translate="noProjectsHint">${translate('noProjectsHint')}</p>
+                    </div>`;
+                document.getElementById('selectAllCheckbox').checked = false; 
+                document.getElementById('selectAllCheckbox').indeterminate = false;
+                return;
+            }
+            projectList.innerHTML = filteredProjects.map(project => {
+                if (!project || !project.stages) { 
+                     console.warn("Skipping rendering for invalid project:", project);
+                     return ''; 
+                }
+                const completedStages = project.stages.filter(s => s.completed).length;
+                const totalStages = project.stages.length;
+                const statusText = project.status === 'completed' ? translate('statusCompleted') : translate('statusInProgress');
+                return `
+                    <div class="project-item ${project.status}">
+                        <div class="project-item-selector">
+                            <input type="checkbox" class="project-select-checkbox" value="${project.id}" onchange="updateSelectAllCheckboxState()">
+                        </div>
+                        <div class="project-item-content" onclick="viewProject('${project.id}')">
+                            <div class="project-header">
+                                <div>
+                                    <h3>${project.projectName}</h3>
+                                    <p style="color: var(--project-item-subtext-color); margin-top: 5px;">
+                                        ${translate('userIDLabel')}: ${project.userID} | ${translate('projectManagerLabel')}: ${project.userName}
+                                    </p>
+                                </div>
+                                <span class="project-status status-${project.status}">${statusText}</span>
+                            </div>
+                            <div style="margin-top: 10px; color: var(--project-item-meta-color);">
+                                <small>${translate('createdDatePrefix')} ${new Date(project.createdAt).toLocaleDateString(currentLanguage === 'ar' ? 'ar-EG' : 'en-US')}</small>
+                                ${project.completedAt ? `<small> | ${translate('completedDatePrefix')} ${new Date(project.completedAt).toLocaleDateString(currentLanguage === 'ar' ? 'ar-EG' : 'en-US')}</small>` : ''}
+                                <div style="margin-top: 5px;">
+                                    ${translate('progressLabel')} ${completedStages}/${totalStages} ${translate('stagesSuffix')} (${totalStages > 0 ? Math.round((completedStages/totalStages)*100) : 0}%)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-item-actions">
+                            <button class="delete-project-button icon-button" 
+                                    onclick="deleteProject('${project.id}', event)" 
+                                    title="${translate('deleteProjectButton')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            updateSelectAllCheckboxState(); 
+        }
+
+        function toggleSelectAll(checked) {
+            document.querySelectorAll('#projectList .project-select-checkbox').forEach(checkbox => {
+                checkbox.checked = checked;
+            });
+        }
+
+        function updateSelectAllCheckboxState() {
+            const allCheckboxes = document.querySelectorAll('#projectList .project-select-checkbox');
+            const selectAllCb = document.getElementById('selectAllCheckbox');
+            if (!allCheckboxes.length) {
+                 selectAllCb.checked = false;
+                 selectAllCb.indeterminate = false;
+                 return;
+            }
+            const checkedCount = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+            if (checkedCount === 0) {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = false;
+            } else if (checkedCount === allCheckboxes.length) {
+                selectAllCb.checked = true;
+                selectAllCb.indeterminate = false;
+            } else {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = true;
+            }
+        }
+        
+        function downloadProjectsCSV() {
+            const selectedCheckboxes = document.querySelectorAll('#projectList .project-select-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert(translate('pleaseSelectProjects'));
+                return;
+            }
+            const selectedProjectIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+            const projectsToDownload = projects.filter(p => selectedProjectIds.includes(p.id));
+            const csvHeaders = [
+                translate('csvHeaderProjectId'), translate('csvHeaderUserId'), translate('csvHeaderProjectName'),
+                translate('csvHeaderUserName'), translate('csvHeaderEmail'), translate('csvHeaderPhone'),
+                translate('csvHeaderStartDate'), translate('csvHeaderEndDate'), translate('csvHeaderStatus'),
+                translate('csvHeaderCreatedAt'), translate('csvHeaderCompletedAt'),
+                translate('csvHeaderTotalStages'), translate('csvHeaderCompletedStages')
+            ];
+            let csvContent = csvHeaders.join(',') + '\r\n';
+            projectsToDownload.forEach(project => {
+                if (!project || !project.stages) return; 
+                const completedStagesCount = project.stages.filter(s => s.completed).length;
+                const totalStagesCount = project.stages.length;
+                const statusText = project.status === 'completed' ? translate('statusCompleted') : translate('statusInProgress');
+                const dateOptions = currentLanguage === 'ar' ? { locale: 'ar-EG' } : { locale: 'en-US' };
+                const row = [
+                    project.id, project.userID,
+                    `"${(project.projectName || '').replace(/"/g, '""')}"`, 
+                    `"${(project.userName || '').replace(/"/g, '""')}"`,   
+                    project.email, project.phone,
+                    project.startDate ? new Date(project.startDate).toLocaleDateString(dateOptions.locale) : '',
+                    project.endDate ? new Date(project.endDate).toLocaleDateString(dateOptions.locale) : '',
+                    statusText,
+                    project.createdAt ? new Date(project.createdAt).toLocaleDateString(dateOptions.locale) : '',
+                    project.completedAt ? new Date(project.completedAt).toLocaleDateString(dateOptions.locale) : '',
+                    totalStagesCount, completedStagesCount
+                ];
+                csvContent += row.join(',') + '\r\n';
+            });
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); 
+            const link = document.createElement("a");
+            if (link.download !== undefined) { 
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", "selected_projects_history.csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        function getFilteredProjects() { 
+            const userIDFilter = document.getElementById('filterUserID').value.toLowerCase();
+            const userNameFilter = document.getElementById('filterUserName').value.toLowerCase();
+            const projectNameFilter = document.getElementById('filterProjectName').value.toLowerCase();
+            return projects.filter(project => {
+                if (!project) return false; 
+                const matchUserID = !userIDFilter || (project.userID && project.userID.toLowerCase().includes(userIDFilter));
+                const matchUserName = !userNameFilter || (project.userName && project.userName.toLowerCase().includes(userNameFilter));
+                const matchProjectName = !projectNameFilter || (project.projectName && project.projectName.toLowerCase().includes(projectNameFilter));
+                return matchUserID && matchUserName && matchProjectName;
+            });
+        }
+
+        function filterProjects() { 
+            loadProjectHistory(); 
+            document.getElementById('selectAllCheckbox').checked = false;
+            document.getElementById('selectAllCheckbox').indeterminate = false;
+        }
+
+        function viewProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            currentProject = { ...project, stages: project.stages ? project.stages.map(s => ({...s})) : [] }; 
+            currentProject._isUpdating = true; 
+            stageCount = currentProject.stages ? currentProject.stages.length : 0;
+            switchTab('new-project'); 
+            document.getElementById('projectForm').style.display = 'none';
+            document.getElementById('projectDisplay').style.display = 'block';
+            displayProjectInfo();
+            renderTimeline();
+            if (currentProject.status === 'completed') {
+                document.querySelector('#projectDisplay .form-section h3').textContent = translate('projectCompletedHeader');
+                document.querySelector('#projectDisplay .form-section button[onclick="addStage()"]').style.display = 'none';
+                document.getElementById('finishProjectBtn').style.display = 'none';
+            } else {
+                 document.querySelector('#projectDisplay .form-section h3').textContent = translate('addProjectStage');
+                 document.querySelector('#projectDisplay .form-section button[onclick="addStage()"]').style.display = 'block';
+                 document.getElementById('finishProjectBtn').style.display = 'block';
+            }
+            applyTranslations(); 
+        }
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async function() {
+            document.titleElement = document.querySelector('title');
+            
+            // Load saved settings
+            setLanguage(currentLanguage); 
+            setTheme(currentTheme);
+            
+            // Set API URL if saved
+            if (API_BASE_URL) {
+                document.getElementById('apiUrlInput').value = API_BASE_URL;
+            }
+            
+            // Load projects from localStorage first (immediate)
+            loadProjectsFromLocalStorage();
+            
+            // Test connection and try to sync with server
+            if (API_BASE_URL) {
+                const connected = await testConnection();
+                if (connected) {
+                    await loadProjectsFromDB(); // This will sync with server
+                }
+            } else {
+                updateConnectionStatus(false);
+            }
+
+            // Handle initial tab state
+            const activeTabButton = document.querySelector('.tab-button.active');
+            let activeTabContentId = 'new-project'; 
+            if (activeTabButton) {
+                const translateKey = activeTabButton.getAttribute('data-translate');
+                if (translateKey === 'projectHistoryTab') {
+                    activeTabContentId = 'project-history';
+                }
+            }
+            if (activeTabContentId === 'project-history') {
+                loadProjectHistory();
+            }
+        });
+    </script>
+</body>
+</html>
